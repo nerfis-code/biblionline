@@ -1,23 +1,20 @@
+import hashlib
 import streamlit as st
-from sqlalchemy import create_engine, text
-# Create the SQL connection to biblionline_db as specified in your secrets file.
+
+
 conn = st.connection('biblionline_db', type='sql')
 
 with conn.session as s:
-    # Query the database
     result = s.execute("SELECT * FROM users")
-    # Display the result
     st.write(result.fetchall())
 
 
 def exist_user(username,password):
     with conn.session as s:
-        # Query the database
-        result = s.execute("SELECT * FROM users WHERE username=:username and password=:password;",
-                           params={"username":username,"password":password})
+        result = s.execute("SELECT 1 FROM users WHERE username=:username and password=:password;",
+                           params={"username":username,"password":hashlib.sha256(password.strip().encode()).hexdigest()})
         
-        # Display the result
-        return len(result.fetchall()) == 1
+        return result.fetchone()
     
 def check_login():
     if 'logged_in' not in st.session_state:
@@ -39,5 +36,4 @@ def check_login():
 
 if check_login():
     st.markdown("## ¡Bienvenido Admin !")
-    # Tu contenido aquí...
     ...

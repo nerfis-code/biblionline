@@ -13,17 +13,17 @@ def show_register():
         username = st.text_input("Nombre de usuario*")
         email = st.text_input("Email*")
         password = st.text_input("Contraseña*", type="password")
-        repetir_password = st.text_input("Repetir contraseña*", type="password")
+        copy_password = st.text_input("Repetir contraseña*", type="password")
         
         submitted = st.form_submit_button("Registrarse")
         
         if submitted:
-            # Validaciones
-            if not all([name, lastname, username, email, password]):
-                st.error("Todos los campos marcados con * son obligatorios")
+            # name, lastname y email ya no seran necesarias
+            if not all([username, password]):
+                st.error("usuario y la contraseña son obligatorios")
                 return
                 
-            if password != repetir_password:
+            if password != copy_password:
                 st.error("Las contraseñas no coinciden")
                 return
             
@@ -42,17 +42,17 @@ def show_register():
                     return
                 
                 # Insertar nuevo usuario
-                hashed_pw = hashlib.sha256(password.encode()).hexdigest()
+                hashed_pw = hashlib.sha256(password.strip().encode()).hexdigest()
                 
                 session.execute(text("""
                     INSERT INTO users 
                     (name, lastname, username, email, password)
-                    VALUES (:nombre, :apellido, :username, :email, :password)
+                    VALUES (:name, :lastname, :username, :email, :password)
                 """), {
-                    'nombre': name,
-                    'apellido': lastname,
-                    'username': username,
-                    'email': email,
+                    'name': name.strip() if name.strip() != "" else None,
+                    'lastname': lastname.strip() if lastname.strip() != "" else None,
+                    'username': username.strip(),
+                    'email': email.strip() if email.strip() != "" else None,
                     'password': hashed_pw
                     })
                 session.commit()
@@ -68,7 +68,9 @@ def show_register():
                 session.close()
 
         # Enlace para volver al login
-        st.markdown("[¿Ya tienes cuenta? Inicia sesión aquí](#login)")
+        
+        st.markdown('<a href="page_login" target="_self">¿Ya tienes cuenta? Inicia sesión aquí</a>',
+                    unsafe_allow_html=True)
 
 if show_register():
     st.markdown("## ¡Bienvenido!")
