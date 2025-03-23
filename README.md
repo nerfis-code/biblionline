@@ -13,8 +13,7 @@ Es una plataforma de renta de libros fisico y virtuale, nuestra cede esta ubicad
 
 pip>=24.3.1
 > **Nota**: El paquete pip viene instalado con python si estas en windows.
-> En mac os ejecuta ```bash
-                        python3 -m ensurepip```
+> En mac os ejecuta ```python3 -m ensurepip```
 > En linux debes instalar el paquete **python-pip**
 ## Instalacion
 
