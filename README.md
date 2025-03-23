@@ -34,6 +34,7 @@ pip>=24.3.1
   source venv/bin/activate
   pip install -r requirements.txt
   # inicia el proyecto
+  chmod +x ./run.sh
   ./run.sh
   
 ```
