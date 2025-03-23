@@ -9,9 +9,6 @@ with conn.session as s:
     # Display the result
     st.write(result.fetchall())
 
-@st.dialog("Felitaciones tienes una cuenta")
-def login():
-    st.write(f"Bienvenido {"Admin"}")
 
 def exist_user(username,password):
     with conn.session as s:
