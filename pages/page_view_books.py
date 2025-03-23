@@ -8,12 +8,14 @@ def view_book(res):
     with col1:
         st.title(res["title"])
         st.image(res["cover"])
-        if st.button("Rentar"):
+        if st.button("Rentar",use_container_width=True):
             # st.session_state.vote = {"item": item, "reason": reason}
             st.rerun()
+        
     with col2:
-        st.title("Sumary")
+        st.title("Descripcion")
         st.markdown(res["description"],unsafe_allow_html=True)
+    
         
 st.title("Estoy viendo los libros")
 text_search = st.text_input("Search videos by title or speaker", value="")
