@@ -2,14 +2,14 @@ import streamlit as st
 from sqlalchemy import text
 import hashlib
 
-def mostrar_registro():
+def show_register():
     conn = st.connection('biblionline_db', type='sql')
     
     with st.form("Formulario de Registro"):
         st.subheader("Crear Nueva Cuenta")
         
-        nombre = st.text_input("Nombre*")
-        apellido = st.text_input("Apellido*")
+        name = st.text_input("Nombre*")
+        lastname = st.text_input("Apellido*")
         username = st.text_input("Nombre de usuario*")
         email = st.text_input("Email*")
         password = st.text_input("Contraseña*", type="password")
@@ -19,7 +19,7 @@ def mostrar_registro():
         
         if submitted:
             # Validaciones
-            if not all([nombre, apellido, username, email, password]):
+            if not all([name, lastname, username, email, password]):
                 st.error("Todos los campos marcados con * son obligatorios")
                 return
                 
@@ -49,8 +49,8 @@ def mostrar_registro():
                     (name, lastname, username, email, password)
                     VALUES (:nombre, :apellido, :username, :email, :password)
                 """), {
-                    'nombre': nombre,
-                    'apellido': apellido,
+                    'nombre': name,
+                    'apellido': lastname,
                     'username': username,
                     'email': email,
                     'password': hashed_pw
@@ -58,7 +58,7 @@ def mostrar_registro():
                 session.commit()
                 
                 st.success("¡Registro exitoso! Redirigiendo...")
-                st.session_state.mostrar_login = True
+                st.session_state.show_register = True
                 st.rerun()
                 
             except Exception as e:
@@ -70,5 +70,5 @@ def mostrar_registro():
         # Enlace para volver al login
         st.markdown("[¿Ya tienes cuenta? Inicia sesión aquí](#login)")
 
-if mostrar_registro():
+if show_register():
     st.markdown("## ¡Bienvenido!")
