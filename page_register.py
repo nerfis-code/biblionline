@@ -1,4 +1,3 @@
-# auth_registro.py
 import streamlit as st
 from sqlalchemy import text
 import hashlib
@@ -30,32 +29,33 @@ def mostrar_registro():
             
             try:
                 # Verificar si el usuario ya existe
-                user_exists = conn.query(
-                    "SELECT 1 FROM users WHERE username = :user OR email = :email",
-                    params={'user': username, 'email': email},
-                    ttl=0
-                )
-                
-                if not user_exists.empty:
+                session = conn.session
+
+                result = session.execute(text("""
+                    SELECT 1 FROM users WHERE username = :user OR email = :email
+                """), {'user': username, 'email': email})
+
+                user_exists = result.fetchone()  # Obtiene el primer resultado si existe
+
+                if user_exists:
                     st.error("El usuario o email ya están registrados")
                     return
                 
                 # Insertar nuevo usuario
                 hashed_pw = hashlib.sha256(password.encode()).hexdigest()
                 
-                with conn.session as session:
-                    session.execute(text("""
-                        INSERT INTO users 
-                        (nombre, apellido, username, email, password)
-                        VALUES (:nombre, :apellido, :username, :email, :password)
-                    """), {
-                        'nombre': nombre,
-                        'apellido': apellido,
-                        'username': username,
-                        'email': email,
-                        'password': hashed_pw
+                session.execute(text("""
+                    INSERT INTO users 
+                    (name, lastname, username, email, password)
+                    VALUES (:nombre, :apellido, :username, :email, :password)
+                """), {
+                    'nombre': nombre,
+                    'apellido': apellido,
+                    'username': username,
+                    'email': email,
+                    'password': hashed_pw
                     })
-                    session.commit()
+                session.commit()
                 
                 st.success("¡Registro exitoso! Redirigiendo...")
                 st.session_state.mostrar_login = True
@@ -64,7 +64,11 @@ def mostrar_registro():
             except Exception as e:
                 st.error(f"Error al registrar: {str(e)}")
 
+            finally:
+                session.close()
+
         # Enlace para volver al login
         st.markdown("[¿Ya tienes cuenta? Inicia sesión aquí](#login)")
 
-
+if mostrar_registro():
+    st.markdown("## ¡Bienvenido!")
