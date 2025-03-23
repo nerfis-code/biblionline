@@ -9,7 +9,9 @@ with conn.session as s:
     # Display the result
     st.write(result.fetchall())
 
-
+@st.dialog("Felitaciones tienes una cuenta")
+def login():
+    st.write(f"Bienvenido {"Admin"}")
 
 
 def check_login():
@@ -23,7 +25,7 @@ def check_login():
         if st.button("Ingresar"):
             if username == "admin" and password == "admin123":
                 st.session_state.logged_in = True
-                st.experimental_return()
+                login()
             else:
                 st.error("Credenciales incorrectas")
         return False
