@@ -23,7 +23,7 @@ def check_login():
         if st.button("Ingresar"):
             if username == "admin" and password == "admin123":
                 st.session_state.logged_in = True
-                st.experimental_rerun()
+                st.experimental_return()
             else:
                 st.error("Credenciales incorrectas")
         return False
