@@ -6,6 +6,6 @@ def search():
     Z = Zlibrary(email=st.secrets.zlibrary_account.email, password=st.secrets.zlibrary_account.password)
 
     # Search for books
-    results = Z.search(message='The Great Gatsby')
+    results = Z.search(message='Batman')
 
     return results
