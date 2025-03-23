@@ -55,9 +55,9 @@ def show_register():
                     })
                 s.commit()
                 
-                st.success("¡Registro exitoso! Redirigiendo...")
-                st.session_state.show_register = True
-                st.rerun()
+            st.success("¡Registro exitoso! Redirigiendo...")
+            st.session_state.show_register = True
+            st.rerun()
 
         # Enlace para volver al login
         
