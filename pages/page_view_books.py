@@ -2,11 +2,15 @@ import streamlit as st
 
 from apis import books
 st.title("Estoy viendo los libros")
-
+text_search = st.text_input("Search videos by title or speaker", value="")
+if text_search:
+    response = books.search(text_search)["books"]
+else:
+    response = books.search("batman")["books"]  
+    
 col1, col2, col3, col4 = st.columns(4)
 cols = [col1,col2,col3,col4,]
 
-response = books.search()["books"]
 st.code(response,wrap_lines=True)
 
 colIndex = 0
