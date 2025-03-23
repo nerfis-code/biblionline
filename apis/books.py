@@ -2,6 +2,7 @@ from Zlibrary import Zlibrary
 import streamlit as st
 
 cache = {}
+@st.cache_data
 def search(message):
     if message in cache:
         return cache[message]
