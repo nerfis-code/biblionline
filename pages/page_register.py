@@ -26,25 +26,23 @@ def show_register():
             if password != copy_password:
                 st.error("Las contraseñas no coinciden")
                 return
-            
-            try:
+            with conn.session as s:
                 # Verificar si el usuario ya existe
-                session = conn.session
 
-                result = session.execute(text("""
-                    SELECT 1 FROM users WHERE username = :user OR email = :email
-                """), {'user': username, 'email': email})
+                result = s.execute(text("""
+                    SELECT 1 FROM users WHERE username = :user
+                """), {'user': username})
 
                 user_exists = result.fetchone()  # Obtiene el primer resultado si existe
 
                 if user_exists:
-                    st.error("El usuario o email ya están registrados")
+                    st.error("El usuario ya están registrados")
                     return
                 
                 # Insertar nuevo usuario
                 hashed_pw = hashlib.sha256(password.strip().encode()).hexdigest()
                 
-                session.execute(text("""
+                s.execute(text("""
                     INSERT INTO users 
                     (name, lastname, username, email, password)
                     VALUES (:name, :lastname, :username, :email, :password)
@@ -55,17 +53,11 @@ def show_register():
                     'email': email.strip() if email.strip() != "" else None,
                     'password': hashed_pw
                     })
-                session.commit()
+                s.commit()
                 
                 st.success("¡Registro exitoso! Redirigiendo...")
                 st.session_state.show_register = True
                 st.rerun()
-                
-            except Exception as e:
-                st.error(f"Error al registrar: {str(e)}")
-
-            finally:
-                session.close()
 
         # Enlace para volver al login
         
