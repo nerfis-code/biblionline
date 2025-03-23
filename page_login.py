@@ -13,7 +13,15 @@ with conn.session as s:
 def login():
     st.write(f"Bienvenido {"Admin"}")
 
-
+def exist_user(username,password):
+    with conn.session as s:
+        # Query the database
+        result = s.execute("SELECT * FROM users WHERE username=:username and password=:password;",
+                           params={"username":username,"password":password})
+        
+        # Display the result
+        return len(result.fetchall()) == 1
+    
 def check_login():
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
@@ -23,15 +31,16 @@ def check_login():
         password = st.text_input("Contraseña", type="password")
         
         if st.button("Ingresar"):
-            if username == "admin" and password == "admin123":
+            
+            if exist_user(username,password):
                 st.session_state.logged_in = True
-                login()
+                st.rerun()
             else:
                 st.error("Credenciales incorrectas")
         return False
     return True
 
 if check_login():
-    st.markdown("## ¡Bienvenido a tu aplicación!")
+    st.markdown("## ¡Bienvenido Admin !")
     # Tu contenido aquí...
     ...
