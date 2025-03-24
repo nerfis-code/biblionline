@@ -15,37 +15,43 @@ if 'notification_message' not in st.session_state:
 def show_rented_books():
 
     rented_books = get_user_books()
-    st.text(rented_books)
+
     if rented_books:
         st.title("Mis Libros Prestados")
+        col1, col2, col3 = st.columns(3)
+        cols = [col1,col2,col3]
+        col_index = 0
         for book in rented_books:
-            with st.container(border=True):
-                st.write(f"**Título:** {book['title']}")
-                if st.button(f"Devolver {book['title']}", key=f"return_{book['title']}"):
-                    # Llamar directamente a la función de devolución sin usar el diálogo
-                    success = return_book(book['title'], st.session_state.user["id"])
+            with cols[col_index]:
+                container = st.container(border=True)
+                container.write(f"**Título:** {book['title']}")
+                container.image(book['cover'])
+                container.link_button(label="Leer online",url=book["readOnlineUrl"])
+                    
+                if container.button(f"Devolver {book['title']}", key=f"return_{book['title']}"):  
+                    success = return_book(book['md5'], st.session_state.user["id"])
                     if success:
                         st.session_state.notification_message = f"Libro '{book['title']}' devuelto correctamente."
                         st.session_state.show_notification = True
 
                         st.rerun()  # Usando st.rerun() en lugar de experimental_rerun
                         if "notification" in st.session_state:
-                         st.success(st.session_state.notification)
-                        del st.session_state.notification  
+                            st.success(st.session_state.notification)
+                            del st.session_state.notification  
         
     else:
         st.info("No tienes libros prestados en este momento.")
-
+    st.text(rented_books)
 # Función para devolver un libro 
-def return_book(book_title, user_id):
+def return_book(book_md5, user_id):
     try:
         conn = st.connection('biblionline_db', type='sql')
         with conn.session as s:
             
-            s.execute("DELETE FROM rented_books WHERE user_id = :user_id AND book_title = :book_title", 
+            s.execute("DELETE FROM rented_books WHERE user_id = :user_id AND book_md5 = :book_md5", 
                       {
                         'user_id': user_id,
-                        'book_title': book_title
+                        'book_md5': book_md5
                         })
             s.commit()
         return True
