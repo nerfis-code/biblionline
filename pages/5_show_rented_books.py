@@ -15,7 +15,7 @@ if 'notification_message' not in st.session_state:
 def show_rented_books():
 
     rented_books = get_user_books()
-    
+    st.text(rented_books)
     if rented_books:
         st.title("Mis Libros Prestados")
         for book in rented_books:
