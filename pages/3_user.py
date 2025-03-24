@@ -80,7 +80,9 @@ def show_user_profile():
                     
             except Exception as e:
                 st.error(f"Error al actualizar perfil: {str(e)}")
-
+    if st.button("Salir de la cuenta"):
+        del st.session_state.user
+        st.rerun()
 
 # Mostrar la página
 show_user_profile()

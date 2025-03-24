@@ -66,12 +66,9 @@ for res in res_books:
     with cols[colIndex]:
         container = st.container(border=True)
         container.image(res["cover"])
-        if userExist:
-            if container.button("Rentar", key=res["id"], disabled=True): 
-                view_book(res)
-        else:
-            if container.button("Rentar", key=res["id"], disabled=True): 
-                view_book(res)
+        if container.button("Rentar", key=res["id"]): 
+            view_book(res)
+            
     colIndex += 1
     colIndex %= len(cols)
 

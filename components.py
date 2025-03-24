@@ -17,3 +17,20 @@ def nav():
             label="Usuario", icon="👤")
     with col3:
         st.page_link("pages/4_book_collection.py", label="coleccion", icon="📖")
+        
+def set_local_storage(key, value):
+    st.html(f"""
+    <script>
+    localStorage.setItem('{key}', '{value}');
+    </script>
+    """, height=0)
+
+# Leer de localStorage
+def get_local_storage(key):
+    html_str = f"""
+    <script>
+    var value = localStorage.getItem('{key}');
+    window.parent.postMessage({{type: 'streamlit:setComponentValue', value: value}}, '*');
+    </script>
+    """
+    return st.html(html_str, height=0)
