@@ -1,1 +1,1 @@
-streamlit run ./main.py
+streamlit run ./View_books.py

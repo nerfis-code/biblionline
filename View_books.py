@@ -3,6 +3,8 @@ from sqlalchemy import text
 from apis import books
 from datetime import datetime, timedelta
 import sqlite3
+from PIL import Image
+from streamlit_navigation_bar import st_navbar
 
 @st.dialog("Libro",width="large")
 def view_book(res):
@@ -30,20 +32,21 @@ def view_book(res):
                                 'rent_date': end_date})
                           
                 
-                s.commit()
-
-                
-            
+                s.commit()       
         
     with col2:
         st.title("Descripcion")
-        st.markdown(res["description"],unsafe_allow_html=True)
-
-
-    
+        st.markdown(res["description"],unsafe_allow_html=True)   
         
-st.title("Estoy viendo los libros")
-text_search = st.text_input("Search videos by title or speaker", value="")
+#st.title("Estoy viendo los libros")
+img = Image.open("image/biblionline_logo.png")
+col1, col2, col3 = st.columns([1,2,1])  # Columnas con proporciones
+with col2:
+    st.image(img, width=300)  # Ajusta el ancho según necesites
+
+
+st.markdown("## 📚 Explora nuestra colección de libros")
+text_search = st.text_input("Deja que tu imaginacion vuele", value="")
 if text_search:
     response = books.search(text_search)["books"]
 else:
