@@ -24,8 +24,8 @@ def view_book(res):
             conn = st.connection('biblionline_db', type='sql')
             with conn.session as s:
                 s.execute(text("""
-                               INSERT INTO rented_books (user_id, book_title, rent_date) 
-                               VALUES (:user_id, :book_title, :rent_date)
+                               INSERT INTO rented_books (user_id, book_md5, rent_date) 
+                               VALUES (:user_id, :book_md5, :rent_date)
                             """), {
                                 'user_id': st.session_state.user["id"], 
                                 'book_md5': res["md5"], 
