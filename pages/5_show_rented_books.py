@@ -25,12 +25,17 @@ def show_rented_books():
                     # Llamar directamente a la función de devolución sin usar el diálogo
                     success = return_book(book['book_title'], st.session_state.user["id"])
                     if success:
-                        st.success(f"Libro '{book['book_title']}' devuelto correctamente.")
+                        st.session_state.notification = f"Libro '{book['book_title']}' devuelto correctamente."
+
                         st.rerun()  # Usando st.rerun() en lugar de experimental_rerun
+                        if "notification" in st.session_state:
+                         st.success(st.session_state.notification)
+                        del st.session_state.notification  
+        
     else:
         st.info("No tienes libros prestados en este momento.")
 
-# Función para devolver un libro (modificada para funcionar sin diálogo)
+# Función para devolver un libro 
 def return_book(book_title, user_id):
     try:
         conn = st.connection('biblionline_db', type='sql')
@@ -50,22 +55,6 @@ def return_book(book_title, user_id):
         st.error(f"Error al devolver el libro: {e}")
         return False
 
-# Si prefieres mantener el diálogo, esta sería la versión alternativa
-def show_return_dialog():
-    if "book_to_return" in st.session_state:
-        book_title = st.session_state.book_to_return
-        
-        with st.dialog("Devolver Libro"):
-            st.title(f"Devolver Libro: {book_title}")
-            
-            if st.button("Confirmar Devolución", use_container_width=True):
-                success = return_book(book_title, st.session_state.user["id"])
-                if success:
-                    st.session_state.pop("book_to_return", None)
-                    st.rerun()
 
 # Mostrar la página de libros prestados
 show_rented_books()
-# Opcionalmente, si quieres usar el diálogo
-if "show_dialog" in st.session_state and st.session_state.show_dialog:
-    show_return_dialog()
