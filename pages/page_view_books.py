@@ -1,7 +1,7 @@
 import streamlit as st
 from sqlalchemy import text
 from apis import books
-from datetime import datetime
+from datetime import datetime, timedelta
 import sqlite3
 
 @st.dialog("Libro",width="large")
@@ -15,7 +15,10 @@ def view_book(res):
             
             #peticion
             now = datetime.now()
-            date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+         
+            end_date = now + timedelta(days=30)
+            end_date = end_date.strftime("%m/%d/%Y, %H:%M:%S")
+           
             conn = st.connection('biblionline_db', type='sql')
             with conn.session as s:
                 s.execute(text("""
@@ -24,12 +27,12 @@ def view_book(res):
                             """), {
                                 'user_id': st.session_state.user["id"], 
                                 'book_title': res["title"], 
-                                'rent_date': date_time})
+                                'rent_date': end_date})
                           
                 
                 s.commit()
 
-
+                
             
         
     with col2:
