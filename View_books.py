@@ -4,6 +4,10 @@ from datetime import datetime, timedelta
 import components
 from apis.books import get_user_books
 
+st.set_page_config(
+    page_title="Vista de libros",
+    page_icon="📚"
+)
 components.nav()
 
 userExist = "user" in st.session_state and st.session_state.user

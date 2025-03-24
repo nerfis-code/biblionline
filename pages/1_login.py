@@ -3,7 +3,9 @@ import streamlit as st
 import components
 
 
-
+st.set_page_config(
+    page_icon="👨"
+)
 conn = st.connection('biblionline_db', type='sql')
 
 
@@ -44,6 +46,7 @@ def check_login():
 
 if check_login():
     name = st.session_state.user["name"] if st.session_state.user["name"] else st.session_state.user["username"]
-    st.markdown(f"## ¡Bienvenido {name} !")
+    st.markdown(f"## ¡Bienvenido {name} 👋!")
     
+    st.page_link("pages/View_books.py", label="Ve a una maravillasa busqueda 💡")
     ...

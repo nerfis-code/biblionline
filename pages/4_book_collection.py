@@ -2,6 +2,9 @@ import streamlit as st
 from apis.books import get_books_data, get_user_books
 import components
 
+st.set_page_config(
+    page_icon="🎒"
+)
 
 components.nav()
 if 'show_notification' not in st.session_state:

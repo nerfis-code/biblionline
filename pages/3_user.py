@@ -3,6 +3,9 @@ from sqlalchemy import text
 import hashlib  # Añadido para cifrar la contraseña
 import components
 
+st.set_page_config(
+    page_icon="⚓"
+)
 components.nav()
 def show_user_profile():
     

@@ -3,6 +3,9 @@ from sqlalchemy import text
 import hashlib
 import components
 
+st.set_page_config(
+    page_icon="🚀"
+)
 components.nav()
 def show_register():
     conn = st.connection('biblionline_db', type='sql')
