@@ -47,18 +47,21 @@ with col2:
 
 st.markdown("## 📚 Explora nuestra colección de libros")
 text_search = st.text_input("Deja que tu imaginacion vuele", value="")
-if text_search:
-    response = books.search(text_search)["books"]
+response = books.search(text_search if text_search else "batman")
+
+if not response:
+    res_books = []
+    st.error("No se encuentra libros")
 else:
-    response = books.search("batman")["books"]  
+    res_books = response["books"]
     
 col1, col2, col3, col4 = st.columns(4)
 cols = [col1,col2,col3,col4,]
 
-st.code(response,wrap_lines=True)
+st.code(res_books,wrap_lines=True)
 
 colIndex = 0
-for res in response:
+for res in res_books:
     with cols[colIndex]:
         container = st.container(border=True)
         container.image(res["cover"])
