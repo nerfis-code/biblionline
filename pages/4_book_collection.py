@@ -73,7 +73,7 @@ if "user" in st.session_state and st.session_state.user:
 else:
     st.info("Para poder ver tu coleccion de libros debes iniciar sesion")
 
-    st.page_link(url="pages/1_login.py",label="Inicia Sesion", icon="👤")
+    st.page_link(label="Inicia Sesion",page="pages/1_login.py", icon="👤")
 
 if st.session_state.show_notification:
     show_notification()
