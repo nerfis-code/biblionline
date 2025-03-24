@@ -84,7 +84,8 @@ col1, col2, col3, col4 = st.columns(4)
 cols = [col1,col2,col3,col4,]
 
 colIndex = 0
-
+if len(st.session_state.response["books"]) == 0:
+    st.text("No se han encontrado libros, prueba con otra busqueda distinta")
 for res in st.session_state.response["books"]:
     with cols[colIndex]:
         container = st.container(border=True)

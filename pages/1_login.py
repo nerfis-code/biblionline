@@ -18,10 +18,8 @@ def exist_user(username,password):
         return result.fetchone()
     
 def check_login():
-    if 'logged_in' not in st.session_state:
-        st.session_state.logged_in = False
-        
-    if not st.session_state.logged_in:
+ 
+    if not "user" in st.session_state:
         username = st.text_input("Usuario")
         password = st.text_input("Contraseña", type="password")
         
@@ -29,7 +27,6 @@ def check_login():
         if st.button("Ingresar"):
             user = exist_user(username,password)
             if user:
-                st.session_state.logged_in = True
                 st.session_state.user = {"id": user[0],
                                          "username": user[1],
                                          "password": user[2],
@@ -45,6 +42,7 @@ def check_login():
     return True
 
 if check_login():
+
     name = st.session_state.user["name"] if st.session_state.user["name"] else st.session_state.user["username"]
     st.markdown(f"## ¡Bienvenido {name} 👋!")
     

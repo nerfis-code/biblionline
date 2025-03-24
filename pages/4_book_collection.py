@@ -65,7 +65,7 @@ def return_book(book_md5, user_id):
 @st.dialog("Libro")
 def show_notification():
     if st.session_state.show_notification:
-        st.html("<p style='color:green'>Se a regresado el lirbo son exito</p>")
+        st.html("<p style='color:green'>Se a regresado el libro con exito</p>")
         if st.button("Cerrar", key="close_notification"):
             st.session_state.show_notification = False
             st.rerun()
