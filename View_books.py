@@ -28,7 +28,7 @@ def view_book(res):
                                VALUES (:user_id, :book_title, :rent_date)
                             """), {
                                 'user_id': st.session_state.user["id"], 
-                                'book_title': res["title"], 
+                                'book_md5': res["md5"], 
                                 'rent_date': end_date})
                           
                 

@@ -1,5 +1,7 @@
 from Zlibrary import Zlibrary
 import streamlit as st
+import aiohttp  # Para hacer solicitudes HTTP asíncronas
+import asyncio
 
 cache = {}
 @st.cache_data(persist="disk")
