@@ -84,8 +84,11 @@ colIndex = 0
 for res in st.session_state.response["books"]:
     with cols[colIndex]:
         container = st.container(border=True)
-        container.image(res["cover"])
-        if container.button("Rentar", key=res["id"]): 
+        if res["cover"] != "/img/cover-not-exists.png":
+            container.image(res["cover"])
+        else:
+            container.text(res["title"])
+        if container.button("ver", key=res["md5"]): 
             view_book(res)
             
     colIndex += 1
@@ -95,20 +98,10 @@ if st.button("Seguir buscando",use_container_width=True):
     st.session_state.response["page"] += 1
     res_books = books.search(st.session_state.response["message"],page=st.session_state.response["page"])
     if res_books:
-        st.session_state.response["books"] += res_books["books"]
-        for res in res_books["books"]:
-            
-            with cols[colIndex]:
-                container = st.container(border=True)
-                if res["cover"] == "/img/cover-not-exists.png":
-                    container.title(res["title"])
-                else:
-                    container.image(res["cover"])
-                if container.button("Rentar", key=res["id"]): 
-                    view_book(res)
-                    
-            colIndex += 1
-            colIndex %= len(cols)
+        for book in res_books["books"]:
+            if not book in st.session_state.response["books"]:
+                st.session_state.response["books"].append(book)
+        st.rerun()
         
     else:
         st.info("hubo un error en la busqueda de libros")
