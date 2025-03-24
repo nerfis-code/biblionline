@@ -1,7 +1,9 @@
 import streamlit as st
 from sqlalchemy import text
 import hashlib
+import components
 
+components.nav()
 def show_register():
     conn = st.connection('biblionline_db', type='sql')
     
@@ -59,10 +61,8 @@ def show_register():
             st.session_state.show_register = True
             st.rerun()
 
-        # Enlace para volver al login
-        
-        st.markdown('<a href="page_login" target="_self">¿Ya tienes cuenta? Inicia sesión aquí</a>',
-                    unsafe_allow_html=True)
+        st.page_link("pages/1_register.py", label="¿Ya tienes cuenta? Inicia sesión aquí")
+
 
 if show_register():
     st.markdown("## ¡Bienvenido!")

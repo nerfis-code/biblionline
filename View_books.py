@@ -2,8 +2,10 @@ import streamlit as st
 from sqlalchemy import text
 from apis import books
 from datetime import datetime, timedelta
-import sqlite3
-from PIL import Image
+import components
+
+
+components.nav()
 
 
 @st.dialog("Libro",width="large")
@@ -37,10 +39,10 @@ def view_book(res):
         st.markdown(res["description"],unsafe_allow_html=True)   
         
 #st.title("Estoy viendo los libros")
-img = Image.open("image/biblionline_logo.png")
+
 col1, col2, col3 = st.columns([1,2,1])  # Columnas con proporciones
 with col2:
-    st.image(img, width=300)  # Ajusta el ancho según necesites
+    st.image("image/biblionline_logo.png", width=300)  # Ajusta el ancho según necesites
 
 
 st.markdown("## 📚 Explora nuestra colección de libros")

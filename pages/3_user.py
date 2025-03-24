@@ -1,12 +1,14 @@
 import streamlit as st
 from sqlalchemy import text
 import hashlib  # Añadido para cifrar la contraseña
+import components
 
+components.nav()
 def show_user_profile():
-    # Verificar si el usuario está logueado
+    
     if 'user' not in st.session_state:
         st.error("Debes iniciar sesión para ver esta página")
-        st.page_link("pages/page_login.py", label="Ir a inicio de sesión")
+        st.page_link("pages/1_login.py", label="Ir a inicio de sesión")
         return
 
     # Conexión a la base de datos

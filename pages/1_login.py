@@ -1,14 +1,13 @@
 import hashlib
 import streamlit as st
+import components
+
 
 
 conn = st.connection('biblionline_db', type='sql')
 
-with conn.session as s:
-    result = s.execute("SELECT * FROM users")
-    st.write(result.fetchall())
 
-
+components.nav()
 def exist_user(username,password):
     with conn.session as s:
         result = s.execute("SELECT * FROM users WHERE username=:username and password=:password;",
