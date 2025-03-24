@@ -4,7 +4,7 @@ from apis import books
 from datetime import datetime, timedelta
 import sqlite3
 from PIL import Image
-from streamlit_navigation_bar import st_navbar
+
 
 @st.dialog("Libro",width="large")
 def view_book(res):
