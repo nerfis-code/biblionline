@@ -59,10 +59,12 @@ def show_register():
                 
             st.success("¡Registro exitoso! Redirigiendo...")
             st.session_state.show_register = True
+            st.balloons()
             st.rerun()
 
-        st.page_link("pages/1_register.py", label="¿Ya tienes cuenta? Inicia sesión aquí")
+        st.page_link("pages/1_login.py", label="¿Ya tienes cuenta? Inicia sesión aquí")
 
 
 if show_register():
     st.markdown("## ¡Bienvenido!")
+    st.link_button(url="pages/1_login.py",label="Empieza tu aventura iniciando sesion")

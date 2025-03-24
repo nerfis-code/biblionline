@@ -23,6 +23,7 @@ def check_login():
         username = st.text_input("Usuario")
         password = st.text_input("Contraseña", type="password")
         
+        st.page_link("pages/2_register.py", label="¿Todavia no tienes cuenta? que esperas!")
         if st.button("Ingresar"):
             user = exist_user(username,password)
             if user:
