@@ -1,28 +1,20 @@
-# pages/page_rented_books.py
+
 import streamlit as st
-from sqlalchemy import text
+
+from apis.books import get_user_books
 
 
 
-# Configurar estado para la notificación
+
 if 'show_notification' not in st.session_state:
     st.session_state.show_notification = False
 if 'notification_message' not in st.session_state:
     st.session_state.notification_message = ""
 
-# Función para mostrar libros prestados
+
 def show_rented_books():
-    # Conectar a la base de datos
-    conn = st.connection('biblionline_db', type='sql')
-    
-    # Consulta SQL para obtener los libros prestados por el usuario actual
-    query = text("""
-        SELECT * FROM rented_books 
-        WHERE user_id = :user_id
-    """)
-    
-    # Ejecutar la consulta con parámetros y obtener resultados como diccionarios
-    rented_books = conn.session.execute(query, {"user_id": st.session_state.user["id"]}).mappings().fetchall()
+
+    rented_books = get_user_books()
     
     if rented_books:
         st.title("Mis Libros Prestados")
