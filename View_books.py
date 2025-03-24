@@ -30,8 +30,6 @@ def view_book(res):
                                 'user_id': st.session_state.user["id"], 
                                 'book_md5': res["md5"], 
                                 'rent_date': end_date})
-                          
-                
                 s.commit()       
         
     with col2:

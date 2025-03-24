@@ -25,7 +25,8 @@ def get_user_books():
     
     @st.cache_data(persist="disk")
     def get_book_info(book_list):
-        md5_list = map(lambda b : b["md5"],book_list)
+        print("####",book_list)
+        md5_list = list(map(lambda b : b["book_md5"],book_list))
         res = []
         for info in asyncio.run(parallel_search(md5_list)):
             if info:
@@ -39,5 +40,6 @@ def get_user_books():
             s.execute("SELECT * FROM rented_books WHERE user_id = :user_id", 
                                         {"user_id": st.session_state.user["id"]}
                                         ).mappings().fetchall()
-        res = map(get_book_info,rented_books)
+        
+        res = get_book_info([dict(row) for row in rented_books])
         return list(res)
