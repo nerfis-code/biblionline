@@ -37,8 +37,8 @@ def view_book(res):
                         s.commit()
                     st.session_state.collection.append(res["md5"])
                 else:
-                    st.info("Ya tienes rentado este libro")
-                   
+                    with col2:
+                        st.info("Ya tienes rentado este libro")      
         else:
             st.button("Rentar",use_container_width=True,disabled=True,help="Necesitas iniciar sesion")    
         
@@ -68,8 +68,6 @@ else:
     
 col1, col2, col3, col4 = st.columns(4)
 cols = [col1,col2,col3,col4,]
-
-st.code(res_books,wrap_lines=True)
 
 colIndex = 0
 
