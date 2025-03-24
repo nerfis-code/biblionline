@@ -1,6 +1,8 @@
 import streamlit as st
+from sqlalchemy import text
 from apis import books
-
+from datetime import datetime
+import sqlite3
 
 @st.dialog("Libro",width="large")
 def view_book(res):
@@ -10,11 +12,31 @@ def view_book(res):
         st.image(res["cover"])
         if st.button("Rentar",use_container_width=True):
             # st.session_state.vote = {"item": item, "reason": reason}
-            st.rerun()
+            
+            #peticion
+            now = datetime.now()
+            date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+            conn = st.connection('biblionline_db', type='sql')
+            with conn.session as s:
+                s.execute(text("""
+                               INSERT INTO rented_books (user_id, book_title, rent_date) 
+                               VALUES (:user_id, :book_title, :rent_date)
+                            """), {
+                                'user_id': st.session_state.user["id"], 
+                                'book_title': res["title"], 
+                                'rent_date': date_time})
+                          
+                
+                s.commit()
+
+
+            
         
     with col2:
         st.title("Descripcion")
         st.markdown(res["description"],unsafe_allow_html=True)
+
+
     
         
 st.title("Estoy viendo los libros")
