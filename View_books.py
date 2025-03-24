@@ -8,9 +8,10 @@ components.nav()
 
 userExist = "user" in st.session_state and st.session_state.user
 
-if not "collection" in st.session_state:
-    st.session_state.collection= get_user_books() 
 
+if not "response" in st.session_state:
+    st.session_state.response = {"page":1, "books":[], "message":"batman"}
+    
 @st.dialog("Libro",width="large")
 def view_book(res):
     col1, col2 = st.columns(2)
@@ -18,6 +19,8 @@ def view_book(res):
         st.title(res["title"])
         st.image(res["cover"])
         if userExist:
+            if not "collection" in st.session_state:
+                st.session_state.collection= get_user_books() 
             if st.button("Rentar",use_container_width=True):
                 
                 if not res["md5"] in st.session_state.collection:
@@ -58,20 +61,27 @@ with col2:
 
 st.markdown("## 📚 Explora nuestra colección de libros")
 text_search = st.text_input("Deja que tu imaginacion vuele", value="")
-response = books.search(text_search if text_search else "batman")
 
-if not response:
-    res_books = []
-    st.error("No se encuentra libros")
-else:
-    res_books = response["books"]
+if text_search and st.session_state.response["message"] != text_search:
+    st.session_state.response["message"] = text_search
+    st.session_state.response["page"] = 0
+    st.session_state.response["books"]= []
+    
+if len(st.session_state.response["books"]) == 0:
+    res_books = books.search(st.session_state.response["message"])
+    if res_books:
+        st.session_state.response["books"] = res_books["books"]
+    else:
+        st.info("Hubo un error en la busque de libros")
+    
+
     
 col1, col2, col3, col4 = st.columns(4)
 cols = [col1,col2,col3,col4,]
 
 colIndex = 0
 
-for res in res_books:
+for res in st.session_state.response["books"]:
     with cols[colIndex]:
         container = st.container(border=True)
         container.image(res["cover"])
@@ -81,3 +91,25 @@ for res in res_books:
     colIndex += 1
     colIndex %= len(cols)
 
+if st.button("Seguir buscando",use_container_width=True):
+    st.session_state.response["page"] += 1
+    res_books = books.search(st.session_state.response["message"],page=st.session_state.response["page"])
+    if res_books:
+        st.session_state.response["books"] += res_books["books"]
+        for res in res_books["books"]:
+            
+            with cols[colIndex]:
+                container = st.container(border=True)
+                if res["cover"] == "/img/cover-not-exists.png":
+                    container.title(res["title"])
+                else:
+                    container.image(res["cover"])
+                if container.button("Rentar", key=res["id"]): 
+                    view_book(res)
+                    
+            colIndex += 1
+            colIndex %= len(cols)
+        
+    else:
+        st.info("hubo un error en la busqueda de libros")
+    

@@ -76,7 +76,6 @@ def show_user_profile():
                     
                     
                     st.success("Perfil actualizado correctamente!")
-                    st.rerun()
                     
             except Exception as e:
                 st.error(f"Error al actualizar perfil: {str(e)}")
