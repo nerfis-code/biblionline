@@ -1,5 +1,5 @@
 import streamlit as st
-from apis.books import get_user_books
+from apis.books import get_books_data, get_user_books
 import components
 
 
@@ -11,8 +11,9 @@ if 'notification_message' not in st.session_state:
 
 
 def show_rented_books():
-
-    rented_books = get_user_books()
+    if not "collection" in st.session_state:
+        st.session_state.collection= get_user_books() 
+    rented_books = get_books_data(st.session_state.collection)
 
     if rented_books:
         st.title("Mis Libros Prestados")
@@ -53,38 +54,18 @@ def return_book(book_md5, user_id):
                         'book_md5': book_md5
                         })
             s.commit()
+        st.session_state.collection= get_user_books() 
         return True
     except Exception as e:
         st.error(f"Error al devolver el libro: {e}")
         return False
-
+@st.dialog("Libro")
 def show_notification():
     if st.session_state.show_notification:
-        # Usar columns para centrar el contenido
-        col1, col2, col3 = st.columns([1, 3, 1])
-        
-        with col2:
-            # Contenedor de notificación con estilo
-            st.markdown(
-                f"""
-                <div style='
-                    background-color: #4CAF50;
-                    color: white;
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                    text-align: center;
-                    margin: 20px 0;
-                '>
-                    <h3>✅ {st.session_state.notification_message}</h3>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            
-            if st.button("Cerrar", key="close_notification"):
-                st.session_state.show_notification = False
-                st.rerun()
+        st.html("<p style='color:green'>Se a regresado el lirbo son exito</p>")
+        if st.button("Cerrar", key="close_notification"):
+            st.session_state.show_notification = False
+            st.rerun()
 
 
 if "user" in st.session_state and st.session_state.user:
@@ -92,7 +73,7 @@ if "user" in st.session_state and st.session_state.user:
 else:
     st.info("Para poder ver tu coleccion de libros debes iniciar sesion")
 
-    st.link_button(url="pages/1_login.py",label="Inicia Sesion", icon="👤")
+    st.page_link(url="pages/1_login.py",label="Inicia Sesion", icon="👤")
 
 if st.session_state.show_notification:
     show_notification()

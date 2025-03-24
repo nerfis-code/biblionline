@@ -1,13 +1,16 @@
 import streamlit as st
-from sqlalchemy import text
 from apis import books
 from datetime import datetime, timedelta
 import components
-
+from apis.books import get_user_books
 
 components.nav()
 
 userExist = "user" in st.session_state and st.session_state.user
+
+if not "collection" in st.session_state:
+    st.session_state.collection= get_user_books() 
+
 @st.dialog("Libro",width="large")
 def view_book(res):
     col1, col2 = st.columns(2)
@@ -17,21 +20,25 @@ def view_book(res):
         if userExist:
             if st.button("Rentar",use_container_width=True):
                 
-                now = datetime.now()
-            
-                end_date = now + timedelta(days=30)
-                end_date = end_date.strftime("%m/%d/%Y, %H:%M:%S")
-            
-                conn = st.connection('biblionline_db', type='sql')
-                with conn.session as s:
-                    s.execute(text("""
-                                INSERT INTO rented_books (user_id, book_md5, rent_date) 
-                                VALUES (:user_id, :book_md5, :rent_date)
-                                """), {
-                                    'user_id': st.session_state.user["id"], 
-                                    'book_md5': res["md5"], 
-                                    'rent_date': end_date})
-                    s.commit()   
+                if not res["md5"] in st.session_state.collection:
+                    now = datetime.now()
+                    end_date = now + timedelta(days=30)
+                    end_date = end_date.strftime("%m/%d/%Y, %H:%M:%S")
+                
+                    conn = st.connection('biblionline_db', type='sql')
+                    with conn.session as s:
+                        s.execute("""
+                                    INSERT INTO rented_books (user_id, book_md5, rent_date) 
+                                    VALUES (:user_id, :book_md5, :rent_date)
+                                    """, {
+                                        'user_id': st.session_state.user["id"], 
+                                        'book_md5': res["md5"], 
+                                        'rent_date': end_date})
+                        s.commit()
+                    st.session_state.collection.append(res["md5"])
+                else:
+                    st.info("Ya tienes rentado este libro")
+                   
         else:
             st.button("Rentar",use_container_width=True,disabled=True,help="Necesitas iniciar sesion")    
         

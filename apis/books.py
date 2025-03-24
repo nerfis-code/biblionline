@@ -19,21 +19,18 @@ async def parallel_search(messages: list[str], limit: int = 1, page: int = 0):
         ))
     return results if results else [{"books":[]}]
 
-    
+@st.cache_data(persist="disk")
+def get_books_data(md5_list):
+    res = []
+    for info in asyncio.run(parallel_search(md5_list)):
+        if len(info["books"]):
+            res.append(info["books"][0])
+        
+    return res
+
 def get_user_books():
     conn = st.connection('biblionline_db', type='sql')
     
-    @st.cache_data(persist="disk")
-    def get_book_info(book_list):
-        print("####",book_list)
-        md5_list = list(map(lambda b : b["book_md5"],book_list))
-        res = []
-        for info in asyncio.run(parallel_search(md5_list)):
-            if info:
-                res.append(info["books"][0])
-            
-        return res
-        
     with conn.session as s:
         
         rented_books = \
@@ -41,5 +38,5 @@ def get_user_books():
                                         {"user_id": st.session_state.user["id"]}
                                         ).mappings().fetchall()
         
-        res = get_book_info([dict(row) for row in rented_books])
+        res = [row["book_md5"] for row in rented_books]
         return list(res)
