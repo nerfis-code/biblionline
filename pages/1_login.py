@@ -48,5 +48,5 @@ if check_login():
     name = st.session_state.user["name"] if st.session_state.user["name"] else st.session_state.user["username"]
     st.markdown(f"## ¡Bienvenido {name} 👋!")
     
-    st.page_link("pages/View_books.py", label="Ve a una maravillasa busqueda 💡")
+    st.page_link("View_books.py", label="Ve a una maravillasa busqueda 💡")
     ...
