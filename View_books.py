@@ -25,8 +25,11 @@ def view_book(res):
         if userExist:
             if not "collection" in st.session_state:
                 st.session_state.collection= get_user_books() 
+                if res["cover"] != "/img/cover-not-exists.png":
+                    container.image(res["cover"])
+                else:
+                    container.text(res["title"])
             if st.button("Rentar",use_container_width=True):
-                
                 if not res["md5"] in st.session_state.collection:
                     now = datetime.now()
                     end_date = now + timedelta(days=30)

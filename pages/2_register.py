@@ -7,6 +7,8 @@ st.set_page_config(
     page_icon="🚀"
 )
 components.nav()
+if not "show_register" in st.session_state:
+    st.session_state.show_register = True
 def show_register():
     conn = st.connection('biblionline_db', type='sql')
     
@@ -61,13 +63,15 @@ def show_register():
                 s.commit()
                 
             st.success("¡Registro exitoso! Redirigiendo...")
-            st.session_state.show_register = True
-            st.balloons()
+
+            st.session_state.show_register = False
             st.rerun()
-
+        
         st.page_link("pages/1_login.py", label="¿Ya tienes cuenta? Inicia sesión aquí")
-
-
-if show_register():
+if st.session_state.show_register:
+    show_register()
+else:
+    st.balloons()
     st.markdown("## ¡Bienvenido!")
-    st.link_button(url="pages/1_login.py",label="Empieza tu aventura iniciando sesion")
+    st.page_link(page="pages/1_login.py",label="Empieza tu aventura iniciando sesion")
+    st.session_state.show_register = True
